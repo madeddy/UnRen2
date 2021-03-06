@@ -17,7 +17,7 @@ import sys
 import argparse
 from pathlib import Path as pt
 import shutil
-from tempfile import mkdtemp
+import tempfile
 from marshal import loads
 from binascii import a2b_base64
 import textwrap
@@ -145,6 +145,7 @@ class UnRen(UrPh):
             UnRen.verbosity = verbose
         self.in_pth = pt(target)
         self.game_pth = None
+        self._tmp_dir = None
         self.ur_tmp_dir = None
         self.rpakit = None
         # self.unrpyc = None  # NOTE: Unneeded till it supports py3
@@ -177,7 +178,7 @@ class UnRen(UrPh):
         """This runs a deferred import of the tools due to the tools just usable
         after our script runs already."""
         try:
-            sys.path.append(self.ur_tmp_dir)
+            sys.path.append(str(self.ur_tmp_dir))
             self.rpakit = __import__('rpakit', globals(), locals())
 
             # WARNING: Dont import `unrpyc`. As of Feb'21 still no py3 support!
@@ -196,14 +197,11 @@ class UnRen(UrPh):
         UnRen.tui_menu_logo = self.stream_dec(UrPh._tuilogo_enc)
         store = self.stream_dec(UnRen._toolstream)
 
-        self.ur_tmp_dir = mkdtemp(prefix='UnRen.', suffix='.tmp')
-        # _tmp_dir = mkdtemp(prefix='UnRen.', suffix='.tmp')
-        # self.ur_tmp_dir = pt(_tmp_dir).resolve(strict=True)
-        # control print
-        print(f"tmp dir: {self.ur_tmp_dir}")
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='UnRen.', suffix='.tmp')
+        self.ur_tmp_dir = pt(self._tmp_dir.name).resolve(strict=True)
 
         for rel_fp, f_data in store.items():
-            f_pth = pt(self.ur_tmp_dir).joinpath(rel_fp)
+            f_pth = self.ur_tmp_dir.joinpath(rel_fp)
             f_pth.parent.mkdir(parents=True, exist_ok=True)
 
             with f_pth.open('wb') as ofi:
@@ -253,8 +251,9 @@ class UnRen(UrPh):
     # @atexit.register
     def cleanup(self):
         # TODO: perhaps deleting the tempdir tree without shutil
-        shutil.rmtree(self.ur_tmp_dir)
-        if not pt(self.ur_tmp_dir).exists():
+        # shutil.rmtree(self.ur_tmp_dir)
+        self._tmp_dir.cleanup()
+        if not self.ur_tmp_dir.is_dir():
             self.inf(1, "Tempdir was successful removed.")
         else:
             self.inf(0, "Tempdir {} could not be removed!".format(self.ur_tmp_dir),
