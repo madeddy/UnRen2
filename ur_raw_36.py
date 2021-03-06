@@ -16,7 +16,6 @@ This app is partly based on the first `unren` from user `Sam` and uses some of t
 import sys
 import argparse
 from pathlib import Path as pt
-import shutil
 import tempfile
 from marshal import loads
 from binascii import a2b_base64
@@ -247,9 +246,6 @@ class UnRen(UrPh):
                 UnRen.count["rpyc_found"] += 1
 
     def _cleanup(self):
-        # TODO: perhaps deleting the tempdir tree without shutil
-        # shutil.rmtree(self.ur_tmp_dir)
-
         # tempfile cleans anyway up, but we make sure
         self._tmp_dir.cleanup()
         if not self.ur_tmp_dir.is_dir():
