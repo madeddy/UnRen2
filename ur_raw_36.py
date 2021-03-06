@@ -101,7 +101,13 @@ class UnRen(UrPh):
     count = {'rpa_found': 0, 'rpyc_found': 0, 'rpyc_done': 0}
     decomp_lst = []
     # tty color code shorthands
-    std, ul, red, gre, ora, blu, ylw, bblu, bred = '\x1b[0m', '\x1b[03m', '\x1b[31m', '\x1b[32m', '\x1b[33m', '\x1b[34m', '\x1b[93m', '\x1b[44;30m', '\x1b[45;30m' if tty_colors else ''
+    std, ul, red, gre, ora, blu, ylw, bblu, bred = (
+        '\x1b[0m', '\x1b[03m',
+        '\x1b[31m', '\x1b[32m',
+        '\x1b[33m', '\x1b[34m',
+        '\x1b[93m', '\x1b[44;30m',
+        '\x1b[45;30m'
+        if tty_colors else '')
 
     tui_menu_logo = None
     tui_menu_opts = f"""
@@ -222,8 +228,8 @@ class UnRen(UrPh):
             print("script_dir is game dir")
         else:
             raise FileNotFoundError(
-                "The given target path is incorrect or Unren is not located in the "
-                f"correct directory! Current dir is: > {script_dir}")
+                "The given target path is incorrect or Unren is not located in "
+                f"the correct directory! Current dir is: > {script_dir}")
 
         self.game_pth = base_pth.joinpath("game")
 
@@ -297,7 +303,8 @@ class UnRen(UrPh):
     def decompile(self):
         """Decompiles RenPy script files."""
         # TODO: reactivate rpyc decompiler if py3 is supported
-        self.inf(0, "For now `unrpyc` does not support python 3! Stay tuned for news on this.", m_sort='warn')
+        self.inf(0, "For now `unrpyc` does not support python 3! Stay tuned for "
+                 "news on this.", m_sort='warn')
 
         # if UnRen.count["rpyc_found"] == 0:
         #     self.inf(0, "Could not find any valid target files in the directory tree.", m_sort='warn')
@@ -318,14 +325,14 @@ class UnRen(UrPh):
 
     def console(self):
         """Enables the RenPy console and developer menu."""
-        console_inf = "Added access to developer menu and debug console with the \
-        following keybindings: Console: SHIFT+O; Dev Menu: SHIFT+D"
+        console_inf = "Added access to developer menu and debug console with the " \
+            "following keybindings: Console: SHIFT+O; Dev Menu: SHIFT+D"
         self.write_rpy_cfg(UnRen.console_code, console_inf)
 
     def quick(self):
         """Enable Quick Save and Quick Load."""
-        quick_inf = "Added ability to quick-load and -save with the following \
-        keybindings: Quick Save: F5; Quick Load: F9"
+        quick_inf = "Added ability to quick-load and -save with the following " \
+            "keybindings: Quick Save: F5; Quick Load: F9"
         self.write_rpy_cfg(UnRen.quick_code, quick_inf)
 
     def rollback(self):
@@ -349,7 +356,10 @@ class UnRen(UrPh):
         """Displays a console text menu and allows choices from the available
         options."""
         while True:
-            print("\n", UnRen.tui_menu_logo, f"Version {__version__}\n", UnRen.tui_menu_opts, "\nType at the prompt the corresponding key character to the task you want to execute.")
+            print("\n", UnRen.tui_menu_logo, f"Version {__version__}\n",
+                  UnRen.tui_menu_opts,
+                  "\nType at the prompt the corresponding key character to the "
+                  "task you want to execute.")
             userinp = input("Task: ").lower()
             if userinp in UnRen.menu_opts.keys():
                 self.inf(1, "Input is valid. Continuing with option "
@@ -364,7 +374,9 @@ class UnRen(UrPh):
 
 def parse_args():
     """Provides argument parsing functionality on CLI. Obviously."""
-    aps = argparse.ArgumentParser(description="A app which provides different functions for the works with RenPy files.", epilog="")
+    aps = argparse.ArgumentParser(description="A app which provides different"
+                                  "functions for the works with RenPy files.",
+                                  epilog="")
     aps.add_argument('targetpath',
                      type=str,
                      help="Base path of the target game to work with.")
