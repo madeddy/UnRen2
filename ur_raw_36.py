@@ -104,13 +104,6 @@ class UnRen(UrPh):
     std, ul, red, gre, ora, blu, ylw, bblu, bred = '\x1b[0m', '\x1b[03m', '\x1b[31m', '\x1b[32m', '\x1b[33m', '\x1b[34m', '\x1b[93m', '\x1b[44;30m', '\x1b[45;30m' if tty_colors else ''
 
     tui_menu_logo = None
-    # tui_menu_logo = fr"""
-    #    __  __        ____                  ___
-    #   / / / /____   / __ \ ___   ____     |__ \
-    #  / / / // __ \ / /_/ // _ \ / __ \    __/ /
-    # / /_/ // / / // _, _//  __// / / /   / __/
-    # \____//_/ /_//_/ |_| \___//_/ /_/   /____/  Version {__version__}
-    # """
     tui_menu_opts = f"""
       {ul}Available Options:{std}
 
@@ -193,7 +186,6 @@ class UnRen(UrPh):
 
     def stream_handler(self):
         """Loads and unpacks the stream to usable source state in a tempdir."""
-        # store = loads(b64decode(UnRen._toolstream))
         UnRen.tui_menu_logo = self.stream_dec(UrPh._tuilogo_enc)
         store = self.stream_dec(UnRen._toolstream)
 
@@ -217,8 +209,8 @@ class UnRen(UrPh):
             else self.in_pth.resolve(strict=True)
 
         # control print
-        print(f"script {script_dir}")
-        print(f"cwd {pt.cwd()}")
+        # print(f"script {script_dir}")
+        # print(f"cwd {pt.cwd()}")
 
         if script_dir.joinpath("lib").is_dir() and script_dir.joinpath("renpy").is_dir():
             base_pth = script_dir
@@ -247,8 +239,6 @@ class UnRen(UrPh):
                 self.decomp_lst.append(fln)
                 UnRen.count["rpyc_found"] += 1
 
-    # untested with context mngr. in py3, doesnt work in 2
-    # @atexit.register
     def cleanup(self):
         # TODO: perhaps deleting the tempdir tree without shutil
         # shutil.rmtree(self.ur_tmp_dir)
@@ -399,13 +389,10 @@ def ur_main(cfg):
 
     _ur.path_check()
     _ur.find_valid_files()
-    # control print var assignm. can go
-    # ur_tmp_d = _ur.toolstream_handler()
+
     _ur.stream_handler()
     _ur.import_tools()
-    # # control print testing if tools in temp
-    # for item in pt(ur_tmp_d).iterdir():
-    #     print(item)
+
     _ur.main_menu()
 
     print("\nMain function was irregular completed! This should not happen.\n")
