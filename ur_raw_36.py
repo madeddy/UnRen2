@@ -148,7 +148,7 @@ class UnRen(UrPh):
         self.ur_tmp_dir = None
         self.rpakit = None
         # self.unrpyc = None  # NOTE: Unneeded till it supports py3
-        atexit.register(self.cleanup)
+        atexit.register(self._cleanup)
 
     # FIXME: newline with textwrap... how?
     # test inf functionality some more
@@ -245,7 +245,7 @@ class UnRen(UrPh):
                 self.decomp_lst.append(fln)
                 UnRen.count["rpyc_found"] += 1
 
-    def cleanup(self):
+    def _cleanup(self):
         # TODO: perhaps deleting the tempdir tree without shutil
         # shutil.rmtree(self.ur_tmp_dir)
         self._tmp_dir.cleanup()
