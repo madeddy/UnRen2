@@ -41,7 +41,7 @@ __status__ = 'Development'
 __version__ = 'vers_placeholder'
 
 
-class UrP:
+class UrPh:
     """This class exists so we can hold all the placeholder/embed vars in a
     shared location at script head."""
 
@@ -88,7 +88,7 @@ class UrP:
     """
 
 
-class UnRen(UrP):
+class UnRen(UrPh):
     """
     UnRen main class for all the core functionality. Arguments:
         Positional: {targetpath} takes a `pathlike` or string
@@ -193,7 +193,7 @@ class UnRen(UrP):
     def stream_handler(self):
         """Loads and unpacks the stream to usable source state in a tempdir."""
         # store = loads(b64decode(UnRen._toolstream))
-        UnRen.tui_menu_logo = self.stream_dec(UrP._tuilogo_enc)
+        UnRen.tui_menu_logo = self.stream_dec(UrPh._tuilogo_enc)
         store = self.stream_dec(UnRen._toolstream)
 
         self.ur_tmp_dir = mkdtemp(prefix='UnRen.', suffix='.tmp')
