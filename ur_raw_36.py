@@ -45,10 +45,10 @@ class UrPh:
     """This class exists so we can hold all the placeholder/embed vars in a
     shared location at script head."""
 
-    # WARNING: Never change the placeholder formating/indentation!
     _toolstream = """tool_placeholder"""
     _tuilogo_enc = """ur_logo_placeholder"""
 
+    # WARNING: Do never change the indentation of the snippeds!
     console_code = """
         # ######### Developer menu and console ####
             config.developer = True
@@ -177,6 +177,7 @@ class UnRen(UrPh):
         """This runs a deferred import of the tools due to the tools just usable
         after our script runs already."""
         try:
+            # sys.path doesn't accept pathlike
             sys.path.append(str(self.ur_tmp_dir))
             self.rpakit = __import__('rpakit', globals(), locals())
 
@@ -248,6 +249,8 @@ class UnRen(UrPh):
     def _cleanup(self):
         # TODO: perhaps deleting the tempdir tree without shutil
         # shutil.rmtree(self.ur_tmp_dir)
+
+        # tempfile cleans anyway up, but we make sure
         self._tmp_dir.cleanup()
         if not self.ur_tmp_dir.is_dir():
             self.inf(1, "Tempdir was successful removed.")
