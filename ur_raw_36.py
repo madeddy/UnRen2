@@ -302,18 +302,21 @@ class UnRen(UrPh):
                  "news on this.", m_sort='warn')
 
         # if UnRen.count["rpyc_found"] == 0:
-        #     self.inf(0, "Could not find any valid target files in the directory tree.", m_sort='warn')
+        #     self.inf(0, "Could not find any valid target files in the directory tree.",
+        #              m_sort='warn')
         #     return
 
+        # inp_q = ("Should already existing rpyc files be overwritten? Type  "
+        #          f"{UnRen.gre}y/n{UnRen.std}: ")
         # while True:
-        #     userinp = raw_input("Should already existing rpyc files be overwritten? Type  {}y/n{}: ".format(cls.gre, cls.std)).lower()  # noqa
+        #     userinp = input(inp_q).lower()
         #     if userinp in "yn":
         #         break
-        # ow = True if userinp == "y" else False
+        # replace = True if userinp == "y" else False
 
         # for dec_file in self.decomp_lst:
         #     self.inf(1, f"{self.telltale(UnRen.count['rpyc_done'], UnRen.count['rpyc_found'], dec_file)}")
-        #     self.unrpyc.decompile_rpyc(dec_file, overwrite=ow)
+        #     self.unrpyc.decompile_rpyc(dec_file, overwrite=replace)
         #     UnRen.count['rpyc_done'] += 1
 
         # self.inf(2, "Decompling of rpyc files done.")
