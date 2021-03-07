@@ -101,12 +101,8 @@ class UnRen(UrPh):
     decomp_lst = []
     # tty color code shorthands
     std, ul, red, gre, ora, blu, ylw, bblu, bred = (
-        '\x1b[0m', '\x1b[03m',
-        '\x1b[31m', '\x1b[32m',
-        '\x1b[33m', '\x1b[34m',
-        '\x1b[93m', '\x1b[44;30m',
-        '\x1b[45;30m'
-        if tty_colors else '')
+        '\x1b[0m', '\x1b[03m', '\x1b[31m', '\x1b[32m', '\x1b[33m', '\x1b[34m',
+        '\x1b[93m', '\x1b[44;30m', '\x1b[45;30m' if tty_colors else '')
 
     tui_menu_logo = None
     tui_menu_opts = f"""
@@ -147,7 +143,7 @@ class UnRen(UrPh):
         self.ur_tmp_dir = None
         self.rpakit = None
         # self.unrpyc = None  # NOTE: Unneeded till it supports py3
-        atexit.register(self._cleanup)
+        atexit.register(self._dispose)
 
     # FIXME: newline with textwrap... how?
     # test inf functionality some more
@@ -245,7 +241,7 @@ class UnRen(UrPh):
                 self.decomp_lst.append(fln)
                 UnRen.count["rpyc_found"] += 1
 
-    def _cleanup(self):
+    def _dispose(self):
         # tempfile cleans anyway up, but we make sure
         self._tmp_dir.cleanup()
         if not self.ur_tmp_dir.is_dir():
@@ -362,7 +358,7 @@ class UnRen(UrPh):
             userinp = input("Task: ").lower()
             if userinp in UnRen.menu_opts.keys():
                 self.inf(1, "Input is valid. Continuing with option "
-                         f"{UnRen.menu_opts[userinp]} ...")
+                         f"\" {UnRen.menu_opts[userinp]} \" ...")
                 break
             self.inf(0, "\x1b[0;30;43mInvalid\x1b[0m key used. Try again.")
 
