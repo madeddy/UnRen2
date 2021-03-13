@@ -140,10 +140,10 @@ class UrBuild:
     # Step 2: Make cmd  - optional (just for the win cmd)
     def build_cmd(self):
         """Constructs the py stream and embeds it in the cmd file."""
-        cmddst_dct = {UrBuild.cpl_py2: UrBuild.dst_cmd2,
-                      UrBuild.cpl_py3: UrBuild.dst_cmd3}
+        cmd_vers_set = ((UrBuild.cpl_py2, UrBuild.dst_cmd2),
+                        (UrBuild.cpl_py3, UrBuild.dst_cmd3))
 
-        for cpl_py, dst_cmd in cmddst_dct.items():
+        for cpl_py, dst_cmd in cmd_vers_set:
             self.read_srcdata(cpl_py)
             # The next step is needed because _tmp holds now the src data but
             # is after overwritten by dst file stream
