@@ -27,7 +27,6 @@ from pathlib import Path as pt
 
 import _ur_vers
 
-
 __title__ = 'UnRen builder'
 __license__ = 'Apache-2'
 __author__ = 'madeddy'
@@ -44,7 +43,8 @@ class UrBuild:
 
     name = __title__
 
-    tools_pth = pt('ur_tools').resolve(strict=True)
+    tools_pth_py2 = pt('ur_tools/t_py2').resolve(strict=True)
+    tools_pth_py3 = pt('ur_tools/t_py3').resolve(strict=True)
     tool_plh = b'tool_placeholder'
     vers_plh = b'vers_placeholder'
     logo_plh = b'ur_logo_placeholder'
@@ -91,25 +91,26 @@ class UrBuild:
         with src_file.open('rb') as ofi:
             self._tmp = ofi.read()
 
-    # Step 1b; pack tools to py
-    def stream_packer(self, src_pth):
-        """Collects tool files in a variable and passes it in the encoder."""
-        store = {}
-        for f_item in self.tool_fl_lst:
-            with pt(f_item).open('rb') as ofi:
-                d_chunk = ofi.read()
-
-            rel_fp = pt(f_item).relative_to(src_pth)
-            store[str(rel_fp)] = d_chunk
-
-        return self.stream_encoder(store)
-
     def stream_encoder(self, raw_str):
         """Packs a raw datastream to a pickled and encoded stream."""
         # To reduce output size a compressor *¹ can be used between pickle and
         # encoder; As last element it is NOT py-code safe
         # *¹ Use just a archive type(zlib, bz2...) renpy supports!
         return b2a_base64(dumps(raw_str, 2))
+
+    # Step 1b; pack tools to py
+    def stream_packer(self, src_pth):
+        """Collects tool files in a variable and passes it in the encoder."""
+        store = {}
+        for f_item in self.tool_fl_lst:
+            with f_item.open('rb') as ofi:
+                d_chunk = ofi.read()
+
+            rel_fp = f_item.relative_to(src_pth)
+            store[str(rel_fp)] = d_chunk
+
+        self.tool_fl_lst.clear()
+        return self.stream_encoder(store)
 
     # Step 1a; find tools
     def path_search(self, search_path):
@@ -120,17 +121,16 @@ class UrBuild:
     # Step 1: Make py
     def build_py(self):
         """Constructs a stream and embeds the tools and other data in it.
-        Writes the complete stream then as new py file."""
-        pydst_dct = {UrBuild.raw_py2: UrBuild.cpl_py2,
-                     UrBuild.raw_py3: UrBuild.cpl_py3}
+        Writes the complete stream then as new py file. """
+        py_vers_sets = ((UrBuild.tools_pth_py2, UrBuild.raw_py2, UrBuild.cpl_py2),
+                        (UrBuild.tools_pth_py3, UrBuild.raw_py3, UrBuild.cpl_py3))
 
-        # shared steps before different targets are opened
-        self.path_search(UrBuild.tools_pth)
-        tool_stream = self.stream_packer(UrBuild.tools_pth)
-        logo_stream = self.stream_encoder(UrBuild.ur_logo)
+        # we loop over the different pth/src/dst version sets
+        for tool_pth, raw_py, cpl_py in py_vers_sets:
+            self.path_search(tool_pth)
+            tool_stream = self.stream_packer(tool_pth)
+            logo_stream = self.stream_encoder(UrBuild.ur_logo)
 
-        # we loop over the different src/dst version pairs with the same steps
-        for raw_py, cpl_py in pydst_dct.items():
             self.read_srcdata(raw_py)
             self.emb_in_stream(UrBuild.tool_plh, tool_stream)
             self.emb_in_stream(UrBuild.logo_plh, logo_stream)
