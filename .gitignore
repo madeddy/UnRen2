@@ -74,9 +74,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # user
-#_storage/
-#ur_tools/
-#operable/
-
-unren_py27.py
-unren_py36.py
+operable/**
+# _storage/**
+# ur_tools/**
+readme.md
